@@ -1,0 +1,64 @@
+from collections import Counter
+import operator
+
+def contar_letras(texto):
+    conteo = Counter()
+    for letra in texto:
+        if letra.isalpha():
+            letra = letra.lower()
+            conteo[letra] += 1
+    return conteo
+
+def reemplazar_letra(texto, letra_original, letra_nueva):
+    texto_modificado = texto.replace(letra_original, letra_nueva.upper())
+    texto_modificado = texto_modificado.replace(letra_original.lower(), letra_nueva.lower())
+    return texto_modificado
+
+def imprimir_mensajesecreto(texto):
+    print("Mensaje secreto actualizado:")
+    print(texto)
+
+def main():
+    # Leer el texto del archivo
+    with open('texto.txt', 'r') as archivo:
+        texto_original = archivo.read()
+        texto = texto_original.lower()  # Convertir a minúsculas para el mensaje secreto
+
+    mensaje_secreto = texto  # Inicializar el mensaje secreto con el texto en minúsculas
+
+    while True:
+        # Contar la frecuencia de cada letra y ordenarlas
+        conteo_letras = contar_letras(texto)
+        print("Frecuencia de cada letra (de mayor a menor):")
+        for letra, frecuencia in conteo_letras.items():
+            print(f"'{letra}': {frecuencia}")
+
+        letra_cambiar = input("Ingrese la letra que desea cambiar (0 para salir): ").lower()
+
+        if letra_cambiar == '0':
+            break
+
+        if not letra_cambiar.isalpha() or len(letra_cambiar) != 1:
+            print("Entrada inválida. Por favor, ingrese una letra válida.")
+            continue
+
+        if letra_cambiar not in conteo_letras:
+            print("La letra no está presente en el texto.")
+            continue
+
+        letra_nueva = input("Ingrese la letra por la que desea reemplazar: ")
+
+        # Reemplazar la letra en el mensaje secreto
+        mensaje_secreto = reemplazar_letra(mensaje_secreto, letra_cambiar, letra_nueva)
+
+        # Imprimir el mensaje secreto actualizado
+        imprimir_mensajesecreto(mensaje_secreto)
+
+    # Guardar el mensaje secreto en un nuevo archivo
+    with open('mensajesecreto.txt', 'w') as archivo_salida:
+        archivo_salida.write(mensaje_secreto)
+
+    print("El mensaje secreto modificado se ha guardado en 'mensajesecreto.txt'.")
+
+if __name__ == "__main__":
+    main()
